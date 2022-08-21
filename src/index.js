@@ -13,11 +13,10 @@ inputData.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(e) {
     const onSearchInput = e.target.value.trim();
-     clearMarkup();
     if (onSearchInput === '') {
         return;
     } else {
-        fetchCountries(onSearchInput).then(countries => addCountries(countries)).catch(error => notFound(error));  
+        fetchCountries(onSearchInput).then(countries => addCountries(countries)).catch(error => notFoundError(error));  
     }
 }
 
@@ -37,6 +36,26 @@ function addCountries(countries) {
 
 }
 
+
+function notFoundError(error) {
+
+    if (error.code === 404) {
+       return Notify.failure('Oops, there is no country with that name');
+    }
+}
+
+function clearMarkup() {
+    countryList.innerHTML = '';
+    countryInfo.innerHTML = '';
+}
+
+function countryListMarkUp(countries) {
+    const makrupList = countries.map(({ name, flags }) => {
+            return `<li><img src="${flags.svg}" width="40"/> ${name} </li> `;
+        }).join('');
+        countryList.insertAdjacentHTML('beforeend', makrupList);
+}
+
 function countryInfoMarkUp (countries) {
 const makrupInfo = countries.map(({ name, flags, capital, population, languages }) => {
             return `<ul class="country">
@@ -48,20 +67,4 @@ const makrupInfo = countries.map(({ name, flags, capital, population, languages 
       })
     .join('');
      countryInfo.insertAdjacentHTML ('beforeend', makrupInfo); 
-}
-
-function countryListMarkUp(countries) {
-    const makrupList = countries.map(({ name, flags }) => {
-            return `<li><img src="${flags.svg}" width="40"/> ${name} </li> `;
-        }).join('');
-        countryList.insertAdjacentHTML('beforeend', makrupList);
-}
-
-function notFound() {
-    Notify.failure('Oops, there is no country with that name');
-}
-
-function clearMarkup() {
-    countryList.innerHTML = '';
-    countryInfo.innerHTML = '';
 }
