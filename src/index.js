@@ -25,7 +25,7 @@ function addCountries(countries) {
     if (countries.length === 1) {
         countryInfoMarkUp(countries);
     }
-    else if (countries.length > 1 & countries.length <= 10) {
+    else if (countries.length > 1 && countries.length <= 10) {
         
         countryListMarkUp(countries);
     }
