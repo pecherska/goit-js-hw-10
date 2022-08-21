@@ -30,7 +30,8 @@ function addCountries(countries) {
         const makrupList = countries.map(({ name, flags }) => {
             return `<li><img src="${flags.svg}" width="40"/> ${name} </li> `;
         }).join('');
-        countryList.insertAdjacentHTML ('beforeend', makrupList);
+        countryList.insertAdjacentHTML('beforeend', makrupList);
+        countryInfo.innerHTML = '';
         
     }
     if (countries.length === 1) {
@@ -42,7 +43,8 @@ function addCountries(countries) {
         <p> Languages: <span>${languages[0].name}</span></p>
             </ul>`;
       })
-      .join('');
+            .join('');
+        countryList.innerHTML = '';
         countryInfo.insertAdjacentHTML ('beforeend', makrupInfo);     
     }
 
