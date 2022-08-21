@@ -13,29 +13,32 @@ inputData.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(e) {
     const onSearchInput = e.target.value.trim();
+     clearMarkup();
     if (onSearchInput === '') {
-        clearMarkup();
         return;
     } else {
-         fetchCountries(onSearchInput).then(addCountries).catch(error);
+        fetchCountries(onSearchInput).then(countries => addCountries(countries)).catch(error => notFound(error));  
     }
 }
 
 function addCountries(countries) {
-    if (countries.length > 10) {
-        clearMarkup();
-        return Notify.info('Too many matches found. Please enter a more specific name.');
-    }
-    if (countries.length > 1) {
-        const makrupList = countries.map(({ name, flags }) => {
-            return `<li><img src="${flags.svg}" width="40"/> ${name} </li> `;
-        }).join('');
-        countryList.insertAdjacentHTML('beforeend', makrupList);
-        countryInfo.innerHTML = '';
-        
-    }
+    clearMarkup();
     if (countries.length === 1) {
-        const makrupInfo = countries.map(({ name, flags, capital, population, languages }) => {
+        countryInfoMarkUp(countries);
+    }
+    else if (countries.length > 1 & countries.length <= 10) {
+        
+        countryListMarkUp(countries);
+    }
+    else {
+       return Notify.info('Too many matches found. Please enter a more specific name.');
+           
+    }
+
+}
+
+function countryInfoMarkUp (countries) {
+const makrupInfo = countries.map(({ name, flags, capital, population, languages }) => {
             return `<ul class="country">
         <li><img src="${flags.svg}" width="60" /> ${name}</li>
         <p> Capital: <span>${capital}</span></p>
@@ -43,15 +46,18 @@ function addCountries(countries) {
         <p> Languages: <span>${languages[0].name}</span></p>
             </ul>`;
       })
-            .join('');
-        countryList.innerHTML = '';
-        countryInfo.insertAdjacentHTML ('beforeend', makrupInfo);     
-    }
-
+    .join('');
+     countryInfo.insertAdjacentHTML ('beforeend', makrupInfo); 
 }
 
-function error() {
-    
+function countryListMarkUp(countries) {
+    const makrupList = countries.map(({ name, flags }) => {
+            return `<li><img src="${flags.svg}" width="40"/> ${name} </li> `;
+        }).join('');
+        countryList.insertAdjacentHTML('beforeend', makrupList);
+}
+
+function notFound() {
     Notify.failure('Oops, there is no country with that name');
 }
 
